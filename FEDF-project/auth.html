@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In & Register — Savoria Recipe App</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍳</text></svg>">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body class="min-h-screen bg-slate-50 flex items-center justify-center p-4 selection:bg-orange-500 selection:text-white">
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Main Container -->
+  <div class="max-w-4xl w-full bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col md:flex-row min-h-[620px]">
+    
+    <!-- Left Showcase Banner (Desktop) -->
+    <div class="md:w-1/2 relative bg-slate-900 text-white p-8 flex flex-col justify-between overflow-hidden">
+      <!-- Background Image with Overlay -->
+      <img
+        src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=1200&q=80"
+        alt="Cooking Kitchen"
+        class="absolute inset-0 w-full h-full object-cover opacity-35"
+      />
+      <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-slate-900/40"></div>
+
+      <!-- Content -->
+      <div class="relative z-10 space-y-4">
+        <a href="index.html" class="inline-flex items-center gap-2 group">
+          <div class="w-10 h-10 rounded-2xl bg-orange-600 flex items-center justify-center text-white shadow-lg">
+            <i class="fa-solid fa-fire-burner text-lg"></i>
+          </div>
+          <div>
+            <span class="text-xl font-extrabold font-serif tracking-tight text-white group-hover:text-orange-400 transition">Savoria</span>
+            <span class="text-[10px] block font-bold text-orange-400 uppercase tracking-widest -mt-1">Culinary Hub</span>
+          </div>
+        </a>
+
+        <div class="pt-6">
+          <span class="px-3 py-1 rounded-full bg-orange-500/20 text-orange-300 text-xs font-semibold border border-orange-500/30">
+            Join 45,000+ Food Lovers
+          </span>
+          <h1 class="text-2xl sm:text-3xl font-extrabold font-serif mt-3 leading-snug">
+            Your Personal Kitchen Companion
+          </h1>
+          <p class="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
+            Create, save, and share your favorite cooking recipes. Filter by pantry ingredients, plan your weekly dinners, and connect with passionate home chefs worldwide.
+          </p>
+        </div>
+      </div>
+
+      <!-- Feature Bullets & Testimonial -->
+      <div class="relative z-10 space-y-4 pt-6">
+        <div class="space-y-2 text-xs text-slate-200">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-circle-check text-orange-400 text-sm"></i>
+            <span>Interactive Serving Scaler for any party size</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-circle-check text-orange-400 text-sm"></i>
+            <span>Smart Pantry Match: "Cook with what's in your fridge"</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-circle-check text-orange-400 text-sm"></i>
+            <span>Step-by-step guidance with automated kitchen timers</span>
+          </div>
+        </div>
+
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-3 border border-white/10 flex items-center gap-3">
+          <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" class="w-9 h-9 rounded-full object-cover border border-orange-400">
+          <div>
+            <p class="text-xs text-slate-200 italic">"Savoria changed how my family cooks dinner. The meal planner is unbeatable."</p>
+            <p class="text-[10px] text-orange-300 font-bold mt-0.5">— Alex Rivera, Home Cook</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side: Forms & Authentication -->
+    <div class="md:w-1/2 p-6 sm:p-10 flex flex-col justify-between space-y-6">
+      <!-- Top Action: Return to Website -->
+      <div class="flex items-center justify-between">
+        <a href="index.html" class="text-xs font-semibold text-slate-500 hover:text-orange-600 transition flex items-center gap-1.5">
+          <i class="fa-solid fa-arrow-left"></i> Return to Recipes
+        </a>
+
+        <!-- Switch Tab Pill -->
+        <div class="bg-slate-100 p-1 rounded-xl flex text-xs font-bold">
+          <button id="auth-tab-login" onclick="switchAuthTab('login')" class="px-3.5 py-1.5 rounded-lg bg-white text-orange-600 shadow-sm transition">
+            Sign In
+          </button>
+          <button id="auth-tab-register" onclick="switchAuthTab('register')" class="px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">
+            Sign Up
+          </button>
+        </div>
+      </div>
+
+      <!-- FORM: SIGN IN / LOGIN -->
+      <div id="section-login" class="space-y-4">
+        <div>
+          <h2 class="text-2xl font-bold font-serif text-slate-900">Welcome Back!</h2>
+          <p class="text-xs text-slate-500 mt-1">Sign in to your culinary account to access your saved recipes.</p>
+        </div>
+
+        <form id="standalone-login-form" class="space-y-3.5 text-xs">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Email Address</label>
+            <div class="relative">
+              <i class="fa-regular fa-envelope absolute left-3.5 top-3 text-slate-400"></i>
+              <input
+                type="email"
+                id="login-email"
+                required
+                value="demo@savoria.com"
+                placeholder="chef@savoria.com"
+                class="w-full border border-slate-200 rounded-xl pl-9 pr-3.5 py-2.5 focus:ring-2 focus:ring-orange-500 focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="block font-bold text-slate-700">Password</label>
+              <button type="button" onclick="showForgotPasswordPrompt()" class="text-[11px] text-orange-600 hover:underline">
+                Forgot password?
+              </button>
+            </div>
+            <div class="relative">
+              <i class="fa-solid fa-lock absolute left-3.5 top-3 text-slate-400"></i>
+              <input
+                type="password"
+                id="login-password"
+                required
+                value="password123"
+                placeholder="••••••••"
+                class="w-full border border-slate-200 rounded-xl pl-9 pr-10 py-2.5 focus:ring-2 focus:ring-orange-500 focus:outline-none"
+              />
+              <button type="button" onclick="togglePasswordVisibility('login-password')" class="absolute right-3.5 top-3 text-slate-400 hover:text-slate-600">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-1">
+            <label class="inline-flex items-center gap-1.5 cursor-pointer">
+              <input type="checkbox" checked class="rounded text-orange-600 focus:ring-orange-500">
+              <span class="text-slate-600">Remember my session</span>
+            </label>
+          </div>
+
+          <button type="submit" class="w-full py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-bold shadow-md transition text-xs flex items-center justify-center gap-2">
+            <i class="fa-solid fa-right-to-bracket"></i> Sign In to Savoria
+          </button>
+        </form>
+
+        <!-- 1-Click Quick Demo Sign-Ins -->
+        <div class="pt-3 border-t border-slate-100 space-y-2">
+          <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider text-center">
+            Or Click To Test With Demo Account:
+          </p>
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <button onclick="fillDemo(0)" class="p-2 border border-slate-200 rounded-xl hover:border-orange-500 hover:bg-orange-50 transition text-left flex items-center gap-2">
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80" class="w-7 h-7 rounded-full object-cover">
+              <div class="truncate">
+                <p class="font-bold text-slate-800 text-[11px] truncate">Alex Rivera</p>
+                <p class="text-[10px] text-slate-400">Home Chef</p>
+              </div>
+            </button>
+            <button onclick="fillDemo(1)" class="p-2 border border-slate-200 rounded-xl hover:border-orange-500 hover:bg-orange-50 transition text-left flex items-center gap-2">
+              <img src="https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=80&q=80" class="w-7 h-7 rounded-full object-cover">
+              <div class="truncate">
+                <p class="font-bold text-slate-800 text-[11px] truncate">Chef Isabella</p>
+                <p class="text-[10px] text-slate-400">Instructor</p>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- FORM: SIGN UP / REGISTER -->
+      <div id="section-register" class="hidden space-y-4">
+        <div>
+          <h2 class="text-2xl font-bold font-serif text-slate-900">Create an Account</h2>
+          <p class="text-xs text-slate-500 mt-1">Join the community to submit recipes and build weekly meal plans.</p>
+        </div>
+
+        <form id="standalone-register-form" class="space-y-3 text-xs">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Your Full Name *</label>
+            <div class="relative">
+              <i class="fa-regular fa-user absolute left-3.5 top-3 text-slate-400"></i>
+              <input
+                type="text"
+                id="reg-name"
+                required
+                placeholder="e.g. Mia Jenkins"
+                class="w-full border border-slate-200 rounded-xl pl-9 pr-3.5 py-2.5 focus:ring-2 focus:ring-orange-500 focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Email Address *</label>
+            <div class="relative">
+              <i class="fa-regular fa-envelope absolute left-3.5 top-3 text-slate-400"></i>
+              <input
+                type="email"
+                id="reg-email"
+                required
+                placeholder="mia@example.com"
+                class="w-full border border-slate-200 rounded-xl pl-9 pr-3.5 py-2.5 focus:ring-2 focus:ring-orange-500 focus:outline-none"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Password (min 6 characters) *</label>
+            <div class="relative">
+              <i class="fa-solid fa-lock absolute left-3.5 top-3 text-slate-400"></i>
+              <input
+                type="password"
+                id="reg-password"
+                required
+                minlength="6"
+                placeholder="••••••••"
+                class="w-full border border-slate-200 rounded-xl pl-9 pr-10 py-2.5 focus:ring-2 focus:ring-orange-500 focus:outline-none"
+              />
+              <button type="button" onclick="togglePasswordVisibility('reg-password')" class="absolute right-3.5 top-3 text-slate-400 hover:text-slate-600">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Your Culinary Style</label>
+            <select id="reg-role" class="w-full border border-slate-200 rounded-xl p-2.5 bg-slate-50">
+              <option value="Enthusiastic Home Cook">Enthusiastic Home Cook</option>
+              <option value="Pastry & Baking Fanatic">Pastry & Baking Fanatic</option>
+              <option value="Plant-Based & Vegan Cook">Plant-Based & Vegan Cook</option>
+              <option value="Quick 20-Minute Meal Specialist">Quick 20-Minute Meal Specialist</option>
+              <option value="Culinary Arts Professional">Culinary Arts Professional</option>
+            </select>
+          </div>
+
+          <button type="submit" class="w-full py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-bold shadow-md transition text-xs flex items-center justify-center gap-2 mt-2">
+            <i class="fa-solid fa-user-plus"></i> Complete Free Registration
+          </button>
+        </form>
+      </div>
+
+      <!-- Bottom Terms Footer -->
+      <div class="pt-4 border-t border-slate-100 text-center text-[11px] text-slate-400">
+        By continuing, you agree to Savoria's Community Guidelines & Recipe Sharing Terms.
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Script for Auth Page Logic (Universal Support for Live Server and Direct File Open) -->
+  <script>
+    const STORAGE_KEY_USER = "savoria_current_user";
+    const STORAGE_KEY_ALL_USERS = "savoria_registered_users";
+
+    const DEMO_USERS = [
+      {
+        id: "user-demo-1",
+        name: "Alex Rivera",
+        email: "demo@savoria.com",
+        password: "password123",
+        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+        role: "Home Chef & Foodie",
+        bio: "Passionate sourdough baker, weeknight dinner explorer, and olive oil fanatic 🌿",
+        createdAt: "2026-01-15"
+      },
+      {
+        id: "user-demo-2",
+        name: "Chef Isabella Rossi",
+        email: "chef@savoria.com",
+        password: "chef123",
+        avatar: "https://images.unsplash.com/photo-1577219491135-ce391730fb2c?auto=format&fit=crop&w=200&q=80",
+        role: "Culinary Arts Instructor",
+        bio: "Certified culinary instructor specializing in modern Mediterranean & artisan pastries 👨‍🍳✨",
+        createdAt: "2025-11-20"
+      }
+    ];
+
+    function getAllUsers() {
+      try {
+        const stored = localStorage.getItem(STORAGE_KEY_ALL_USERS);
+        return stored ? JSON.parse(stored) : DEMO_USERS;
+      } catch (e) {
+        return DEMO_USERS;
+      }
+    }
+
+    function saveAllUsers(users) {
+      try {
+        localStorage.setItem(STORAGE_KEY_ALL_USERS, JSON.stringify(users));
+      } catch (e) {
+        console.error("Storage error:", e);
+      }
+    }
+
+    function setCurrentUser(user) {
+      try {
+        const sessionUser = { ...user };
+        delete sessionUser.password;
+        localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(sessionUser));
+      } catch (e) {
+        console.error("Session error:", e);
+      }
+    }
+
+    window.switchAuthTab = function(tab) {
+      const loginSection = document.getElementById("section-login");
+      const registerSection = document.getElementById("section-register");
+      const tabLogin = document.getElementById("auth-tab-login");
+      const tabRegister = document.getElementById("auth-tab-register");
+
+      if (tab === "login") {
+        loginSection.classList.remove("hidden");
+        registerSection.classList.add("hidden");
+        tabLogin.className = "px-3.5 py-1.5 rounded-lg bg-white text-orange-600 shadow-sm transition";
+        tabRegister.className = "px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition";
+      } else {
+        loginSection.classList.add("hidden");
+        registerSection.classList.remove("hidden");
+        tabRegister.className = "px-3.5 py-1.5 rounded-lg bg-white text-orange-600 shadow-sm transition";
+        tabLogin.className = "px-3.5 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition";
+      }
+    };
+
+    window.togglePasswordVisibility = function(fieldId) {
+      const field = document.getElementById(fieldId);
+      if (field) {
+        field.type = field.type === "password" ? "text" : "password";
+      }
+    };
+
+    window.showForgotPasswordPrompt = function() {
+      const email = prompt("Please enter your registered email address to receive password reset instructions:", "demo@savoria.com");
+      if (email) {
+        showToast(`Password reset link dispatched to ${email}! (Demo: use password123)`, "success");
+      }
+    };
+
+    window.fillDemo = function(idx) {
+      const demo = DEMO_USERS[idx] || DEMO_USERS[0];
+      setCurrentUser(demo);
+      showToast(`Signed in successfully as ${demo.name}! Redirecting...`, "success");
+      setTimeout(() => {
+        window.location.href = "index.html#home";
+      }, 1000);
+    };
+
+    document.getElementById("standalone-login-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const email = document.getElementById("login-email").value.trim().toLowerCase();
+      const pass = document.getElementById("login-password").value;
+      const users = getAllUsers();
+      const user = users.find(u => u.email.toLowerCase() === email && u.password === pass);
+
+      if (!user) {
+        showToast("Invalid email or password. Please try demo account.", "warning");
+        return;
+      }
+
+      setCurrentUser(user);
+      showToast(`Welcome back, ${user.name}! Redirecting...`, "success");
+      setTimeout(() => {
+        window.location.href = "index.html#home";
+      }, 1000);
+    });
+
+    document.getElementById("standalone-register-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const name = document.getElementById("reg-name").value.trim();
+      const email = document.getElementById("reg-email").value.trim().toLowerCase();
+      const pass = document.getElementById("reg-password").value;
+      const role = document.getElementById("reg-role").value;
+
+      if (!name || !email || !pass) {
+        showToast("Please fill in all required fields.", "warning");
+        return;
+      }
+
+      if (pass.length < 6) {
+        showToast("Password must be at least 6 characters.", "warning");
+        return;
+      }
+
+      const users = getAllUsers();
+      if (users.some(u => u.email.toLowerCase() === email)) {
+        showToast("An account with this email already exists.", "warning");
+        return;
+      }
+
+      const newUser = {
+        id: `user-${Date.now()}`,
+        name: name,
+        email: email,
+        password: pass,
+        role: role,
+        avatar: `https://api.dicebear.com/7.x/adventurer/svg?seed=${encodeURIComponent(name)}`,
+        bio: "Excited to share recipes and explore culinary inspirations!",
+        createdAt: new Date().toISOString().split("T")[0]
+      };
+
+      users.push(newUser);
+      saveAllUsers(users);
+      setCurrentUser(newUser);
+
+      showToast(`Account created for Chef ${name}! Redirecting...`, "success");
+      setTimeout(() => {
+        window.location.href = "index.html#home";
+      }, 1200);
+    });
+
+    function showToast(message, type) {
+      type = type || "info";
+      const container = document.getElementById("toast-container");
+      if (!container) return;
+
+      const toast = document.createElement("div");
+      const bgColors = {
+        success: "bg-emerald-600 text-white",
+        info: "bg-slate-900 text-white",
+        warning: "bg-amber-600 text-white"
+      };
+
+      toast.className = `toast-msg flex items-center gap-2.5 px-4 py-3 rounded-2xl shadow-xl text-xs font-medium ${bgColors[type] || bgColors.info}`;
+      toast.innerHTML = `<span>${message}</span>`;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.animation = "toastSlideOut 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards";
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+  </script>
+</body>
+</html>

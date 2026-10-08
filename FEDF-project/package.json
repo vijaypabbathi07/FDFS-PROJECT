@@ -1,0 +1,24 @@
+{
+  "name": "savoria-food-recipe-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Community-driven food recipe and meal planning web platform built for VS Code",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [
+    "recipe-app",
+    "cooking",
+    "meal-planner",
+    "frontend-project",
+    "javascript",
+    "tailwind"
+  ],
+  "author": "Savoria Team",
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^5.2.0"
+  }
+}

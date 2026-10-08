@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Savoria — Community Recipes & Meal Planning Platform</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍳</text></svg>">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fff7ed',
+              100: '#ffedd5',
+              200: '#fed7aa',
+              300: '#fdba74',
+              400: '#fb923c',
+              500: '#f97316',
+              600: '#ea580c',
+              700: '#c2410c',
+              800: '#9a3412',
+              900: '#7c2d12',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="./css/style.css" />
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-orange-500 selection:text-white">
+
+  <!-- Toast Notification Hub -->
+  <div id="toast-container"></div>
+
+  <!-- Modal Container Overlay -->
+  <div id="modal-container"></div>
+
+  <!-- Navigation Bar -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        
+        <!-- Brand Logo -->
+        <a href="#home" class="flex items-center gap-2.5 group">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-orange-600 to-amber-500 flex items-center justify-center text-white shadow-md shadow-orange-500/20 group-hover:scale-105 transition">
+            <i class="fa-solid fa-fire-burner text-lg"></i>
+          </div>
+          <div>
+            <span class="text-xl font-extrabold tracking-tight font-serif text-slate-900 group-hover:text-orange-600 transition">Savoria</span>
+            <span class="text-[10px] block font-bold text-orange-600 uppercase tracking-widest -mt-1">Culinary Hub</span>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation Links -->
+        <nav class="hidden md:flex items-center gap-1">
+          <button data-nav-target="home" class="nav-link px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-orange-600 hover:bg-orange-50/50 transition">
+            <i class="fa-solid fa-compass mr-1.5 text-xs text-orange-500"></i> Explore
+          </button>
+          <button data-nav-target="pantry" class="nav-link px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-orange-600 hover:bg-orange-50/50 transition">
+            <i class="fa-solid fa-basket-shopping mr-1.5 text-xs text-emerald-600"></i> Pantry Match
+          </button>
+          <button data-nav-target="collections" class="nav-link px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-orange-600 hover:bg-orange-50/50 transition">
+            <i class="fa-solid fa-bookmark mr-1.5 text-xs text-amber-500"></i> Collections
+          </button>
+          <button data-nav-target="meal-planner" class="nav-link px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-orange-600 hover:bg-orange-50/50 transition">
+            <i class="fa-solid fa-calendar-days mr-1.5 text-xs text-blue-500"></i> Meal Planner
+          </button>
+          <button data-nav-target="submit-recipe" class="nav-link px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-orange-600 hover:bg-orange-50/50 transition">
+            <i class="fa-solid fa-circle-plus mr-1.5 text-xs text-rose-500"></i> Submit Recipe
+          </button>
+          <a href="auth.html" class="px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-600 hover:text-orange-600 hover:bg-orange-50/50 transition" title="Standalone Login/Sign-up page">
+            <i class="fa-solid fa-key mr-1.5 text-xs text-purple-500"></i> Sign In Page
+          </a>
+        </nav>
+
+        <!-- Right Side: Auth / Profile Button -->
+        <div class="hidden md:flex items-center gap-3">
+          <div id="nav-auth-section">
+            <!-- Dynamically populated by JS Auth watcher -->
+          </div>
+        </div>
+
+        <!-- Mobile Menu Hamburger Button -->
+        <div class="flex md:hidden items-center gap-2">
+          <button id="mobile-menu-btn" class="p-2 rounded-xl text-slate-600 hover:text-orange-600 hover:bg-slate-100 transition">
+            <i class="fa-solid fa-bars text-xl"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Menu -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-slate-100 bg-white px-4 pt-2 pb-6 space-y-2 shadow-lg">
+      <button data-nav-target="home" class="w-full text-left px-3 py-2 rounded-xl text-sm font-semibold text-slate-700 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-2">
+        <i class="fa-solid fa-compass text-orange-500"></i> Explore Recipes
+      </button>
+      <button data-nav-target="pantry" class="w-full text-left px-3 py-2 rounded-xl text-sm font-semibold text-slate-700 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-2">
+        <i class="fa-solid fa-basket-shopping text-emerald-600"></i> Pantry Match ("What can I cook?")
+      </button>
+      <button data-nav-target="collections" class="w-full text-left px-3 py-2 rounded-xl text-sm font-semibold text-slate-700 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-2">
+        <i class="fa-solid fa-bookmark text-amber-500"></i> Saved Collections
+      </button>
+      <button data-nav-target="meal-planner" class="w-full text-left px-3 py-2 rounded-xl text-sm font-semibold text-slate-700 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-2">
+        <i class="fa-solid fa-calendar-days text-blue-500"></i> Weekly Meal Planner & Grocery
+      </button>
+      <button data-nav-target="submit-recipe" class="w-full text-left px-3 py-2 rounded-xl text-sm font-semibold text-slate-700 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-2">
+        <i class="fa-solid fa-circle-plus text-rose-500"></i> Submit New Recipe
+      </button>
+      <a href="auth.html" class="w-full text-left px-3 py-2 rounded-xl text-sm font-semibold text-purple-600 hover:bg-purple-50 flex items-center gap-2">
+        <i class="fa-solid fa-key"></i> Dedicated Login & Sign-Up Page
+      </a>
+      <div id="mobile-auth-section" class="pt-3 border-t border-slate-100">
+        <!-- Auth section for mobile -->
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Dynamic View Container -->
+  <main id="main-content" class="flex-1">
+    <!-- Populated dynamically by js/app.js -->
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 text-slate-300 py-12 border-t border-slate-800 mt-20 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <!-- Column 1: Brand Info -->
+        <div class="space-y-3">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-orange-600 flex items-center justify-center text-white">
+              <i class="fa-solid fa-fire-burner"></i>
+            </div>
+            <span class="text-xl font-bold font-serif text-white">Savoria</span>
+          </div>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            The community-driven food recipe and meal planning platform. Search recipes by ingredients, scale servings automatically, save collections, and cook with step-by-step guidance.
+          </p>
+          <div class="flex gap-3 text-slate-400 text-sm pt-2">
+            <a href="#" class="hover:text-orange-400 transition"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" class="hover:text-orange-400 transition"><i class="fa-brands fa-pinterest"></i></a>
+            <a href="#" class="hover:text-orange-400 transition"><i class="fa-brands fa-youtube"></i></a>
+            <a href="#" class="hover:text-orange-400 transition"><i class="fa-brands fa-github"></i></a>
+          </div>
+        </div>
+
+        <!-- Column 2: Quick Links -->
+        <div class="space-y-2.5 text-xs">
+          <h4 class="font-bold uppercase tracking-wider text-white">Discover</h4>
+          <ul class="space-y-2 text-slate-400">
+            <li><a href="#home" class="hover:text-white transition">Featured Recipes</a></li>
+            <li><a href="#pantry" class="hover:text-white transition">Pantry What's in Fridge Search</a></li>
+            <li><a href="#meal-planner" class="hover:text-white transition">Weekly Meal Planner</a></li>
+            <li><a href="#collections" class="hover:text-white transition">Curated Collections</a></li>
+            <li><a href="#submit-recipe" class="hover:text-white transition">Submit Your Recipe</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Global Cuisines -->
+        <div class="space-y-2.5 text-xs">
+          <h4 class="font-bold uppercase tracking-wider text-white">Cuisines</h4>
+          <ul class="space-y-2 text-slate-400">
+            <li><a href="#home" class="hover:text-white transition">Italian Classics</a></li>
+            <li><a href="#home" class="hover:text-white transition">Japanese Ramen & Rice</a></li>
+            <li><a href="#home" class="hover:text-white transition">Mexican Tacos & Salsas</a></li>
+            <li><a href="#home" class="hover:text-white transition">Indian Curries & Makhani</a></li>
+            <li><a href="#home" class="hover:text-white transition">Mediterranean Bowls</a></li>
+          </ul>
+        </div>
+
+        <!-- Column 4: Culinary Newsletter -->
+        <div class="space-y-3 text-xs">
+          <h4 class="font-bold uppercase tracking-wider text-white">Culinary Newsletter</h4>
+          <p class="text-slate-400">Get 3 fresh chef-crafted recipes delivered to your inbox every Sunday morning.</p>
+          <form onsubmit="event.preventDefault(); window.app.showToast('Subscribed to Savoria Weekly Digest!', 'success');" class="flex gap-2">
+            <input type="email" placeholder="Your email address" required class="flex-1 bg-slate-800 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-1 focus:ring-orange-500">
+            <button type="submit" class="px-3.5 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-xl font-bold transition">
+              Join
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="pt-6 border-t border-slate-800 text-center text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <p>© 2026 Savoria Cooking & Recipe App. Built with modern ES Modules, Tailwind CSS & HTML5.</p>
+        <p>Created for VS Code Frontend Project</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Entry Point -->
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
